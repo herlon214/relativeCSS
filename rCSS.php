@@ -94,6 +94,8 @@ class rCSS
 			$Out = $match[0];
 			$Out = implode('',$Out);
 			$Out = str_replace(array(' id=',' class=','"','div'),array('#','.','',''),$Out);
+			$Out = str_replace('"', ' .',$Out);
+			$Out = str_replace('a .href=','',$Out);
 			
 			$tok = strtok($Out, "<>");
 			while ($tok !== false) {
@@ -103,8 +105,31 @@ class rCSS
 				}
 				$tok = strtok("<>");
 			}
-			$this->htmlTags = $htmlTags;
-			var_dump($htmlTags);
+			foreach($htmlTags as $K => $V)
+			{
+				if(substr_count($V,' ') > 0)
+				{
+					$x = explode(' ',$V);
+					foreach($x as $y)
+					{
+						$html2[$y] = $K;
+					}
+				}
+				$html2[$V] = $K;
+			}
+			foreach($html2 as $h => $k)
+			{
+				if(substr_count($h,' ') > 0)
+				{
+					$x = explode(' ',$h);
+					foreach($x as $z)
+					{
+						$html2[$z] = '';
+					}
+				}
+			}
+			$this->htmlTags = $html2;
+			var_dump($this->htmlTags);
 		}
 	}
 	/*
@@ -138,6 +163,7 @@ class rCSS
 			}
 			
 		}
+		
 		foreach($this->UseSelectors as $K => $V)
 		{
 			echo $K . '{ ' . $V . ' } <br />';
