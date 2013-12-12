@@ -3,6 +3,7 @@
 * Classe Relative CSS
 * @author Herlon Aguiar <herlon214@gmail.com>
 */
+require_once('phpQuery.php');
 class rCSS
 {
 	public $Out; # Variável de conteúdo capturado da página
@@ -76,7 +77,7 @@ class rCSS
 			#$this->Selectors = array_combine($selectors,$sstyles);
 			$this->Selectors = $selectors;
 			$this->Styles = $sstyles;
-			var_dump($this->Selectors);
+			print_r($this->Selectors);
 		}
 		
 	}
@@ -88,6 +89,7 @@ class rCSS
 		}else
 		{
 			$Out = $this->Out;
+			$pq = phpQuery::newDocumentHtml($Out);
 			# Remove as quebras de linha
 			$Out = preg_replace("/\s+/", " ", $Out);
 			$Out = preg_match_all("'<(.*?)>'si", $Out, $match);
@@ -101,13 +103,31 @@ class rCSS
 			while ($tok !== false) {
 				if(strlen($tok) > 1 and substr_count($tok,'/') <= 0)
 				{
-					$htmlTags[] = $tok;
+					# Remove HREF
+					if(substr_count($tok,'href') == 0)
+					{
+						if(substr_count($tok,'#') > 0 and substr_count($tok,'.') > 0)
+						{
+							$tok = str_replace(array('#','.'),array(' #',' .'),$tok);
+						}elseif(substr_count($tok,' ') > 0)
+						{
+							$t = explode(' ',$tok);
+							foreach($t as $tt)
+							{
+									$tt = '.'.$tt;
+									$tt = str_replace('..','.',$tt);
+									$htmlTags[$tt] = $tt;
+							}
+						}else {
+							$htmlTags[$tok] = $tok;
+						}
+					}
 				}
 				$tok = strtok("<>");
 			}
 			
 			$this->htmlTags = $htmlTags;
-			var_dump($this->htmlTags);
+			var_dump($htmlTags);
 		}
 	}
 	/*
@@ -127,6 +147,7 @@ class rCSS
 	{
 		foreach($this->htmlTags as $hTag)
 		{
+			var_dump($hTag);
 			#if(array_key_exists($hTag,$this->Selectors))
 			#{
 			#	echo $hTag . ' { ' . $this->Selectors[$hTag] . ' } <br />';
@@ -134,6 +155,7 @@ class rCSS
 			$Key = array_search($hTag,$this->Selectors);
 			if($Key != false)
 			{
+				
 				if(!array_key_exists($Key,$this->UseSelectors))
 				{
 					$this->UseSelectors[$this->Selectors[$Key]] = $this->Styles[$Key];
