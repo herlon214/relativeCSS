@@ -132,7 +132,6 @@ class rCSS
 			}
 			
 			$this->htmlTags = $htmlTags;
-			var_dump($htmlTags);
 		}
 	}
 	/*
@@ -150,6 +149,7 @@ class rCSS
 	*/
 	function mergeAll()
 	{
+		var_dump($this->htmlTags,$this->Selectors);
 		foreach($this->htmlTags as $hTag)
 		{
 			#if(array_key_exists($hTag,$this->Selectors))
@@ -157,7 +157,10 @@ class rCSS
 			#	echo $hTag . ' { ' . $this->Selectors[$hTag] . ' } <br />';
 			#}
 			$Key = array_search($hTag,$this->Selectors);
-			var_dump($hTag,$Key);
+			if($Key != false) 
+			{
+				echo 'Achou '.$hTag.' na chave '.$Key . '<br />';
+			}
 			if($Key != false)
 			{
 				if(!array_key_exists($Key,$this->UseSelectors))
