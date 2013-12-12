@@ -105,30 +105,8 @@ class rCSS
 				}
 				$tok = strtok("<>");
 			}
-			foreach($htmlTags as $K => $V)
-			{
-				if(substr_count($V,' ') > 0)
-				{
-					$x = explode(' ',$V);
-					foreach($x as $y)
-					{
-						$html2[$y] = $K;
-					}
-				}
-				$html2[$V] = $K;
-			}
-			foreach($html2 as $h => $k)
-			{
-				if(substr_count($h,' ') > 0)
-				{
-					$x = explode(' ',$h);
-					foreach($x as $z)
-					{
-						$html2[$z] = '';
-					}
-				}
-			}
-			$this->htmlTags = $html2;
+			
+			$this->htmlTags = $htmlTags;
 			var_dump($this->htmlTags);
 		}
 	}
