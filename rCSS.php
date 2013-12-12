@@ -51,7 +51,7 @@ class rCSS
 			$spos = 0;
 			# Loop separando os identificadores dos atributos
 			while ($tok !== false) { 
-			  $sarray[$spos] = $tok;
+			  $sarray[$spos] = $tok;	
 			  $spos++; 
 			  $tok = strtok("{}");
 			}
@@ -66,8 +66,19 @@ class rCSS
 			# Loop para juntar seletores dos atributos
 			for($i = 0; $i<$size; $i++){
 			   if ($i % 2 == 0) { 
+				if(substr_count($sarray[$i],',') > 0)
+				{
+					$t = explode(',',$sarray[$i]);
+					foreach($t as $tt)
+					{
+						$selectors[$npos] = $tt;
+						$npos++;
+					}
+				}else{
 				 $selectors[$npos] = $sarray[$i];
-				 $npos++;    
+				$npos++;
+				}
+				 
 			   }else{
 				$sstyles[$sstl] = $sarray[$i];
 				$sstl++;
@@ -77,7 +88,7 @@ class rCSS
 			#$this->Selectors = array_combine($selectors,$sstyles);
 			$this->Selectors = $selectors;
 			$this->Styles = $sstyles;
-			print_r($this->Selectors);
+			var_dump($this->Selectors);
 		}
 		
 	}
@@ -102,25 +113,21 @@ class rCSS
 			$tok = strtok($Out, "<>");
 			while ($tok !== false) {
 				if(strlen($tok) > 1 and substr_count($tok,'/') <= 0)
-				{
-					# Remove HREF
-					if(substr_count($tok,'href') == 0)
+				{	
+					$tok = str_replace(array('#','.'),array(' #',' .'),$tok);
+					if(substr($tok,0,1) == " ")
 					{
-						if(substr_count($tok,'#') > 0 and substr_count($tok,'.') > 0)
+						$tok = substr($tok,1,strlen($tok));
+					}
+					if(substr_count($tok,' ') > 0)
+					{
+						$t = explode(' ',$tok);
+						foreach($t as $tt)
 						{
-							$tok = str_replace(array('#','.'),array(' #',' .'),$tok);
-						}elseif(substr_count($tok,' ') > 0)
-						{
-							$t = explode(' ',$tok);
-							foreach($t as $tt)
-							{
-									$tt = '.'.$tt;
-									$tt = str_replace('..','.',$tt);
-									$htmlTags[$tt] = $tt;
-							}
-						}else {
-							$htmlTags[$tok] = $tok;
+							$htmlTags[$tt] = $tt;
 						}
+					}else {
+						$htmlTags[$tok] = $tok;
 					}
 				}
 				$tok = strtok("<>");
@@ -128,6 +135,7 @@ class rCSS
 			
 			$this->htmlTags = $htmlTags;
 			var_dump($htmlTags);
+			var_dump(count($htmlTags));
 		}
 	}
 	/*
@@ -163,7 +171,6 @@ class rCSS
 			}
 			
 		}
-		
 		foreach($this->UseSelectors as $K => $V)
 		{
 			echo $K . '{ ' . $V . ' } <br />';
