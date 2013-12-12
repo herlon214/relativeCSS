@@ -3,7 +3,7 @@
 * Classe Relative CSS
 * @author Herlon Aguiar <herlon214@gmail.com>
 */
-require_once('phpQuery.php');
+
 class rCSS
 {
 	public $Out; # Variável de conteúdo capturado da página
@@ -88,7 +88,6 @@ class rCSS
 			#$this->Selectors = array_combine($selectors,$sstyles);
 			$this->Selectors = $selectors;
 			$this->Styles = $sstyles;
-			var_dump($this->Selectors);
 		}
 		
 	}
@@ -100,7 +99,6 @@ class rCSS
 		}else
 		{
 			$Out = $this->Out;
-			$pq = phpQuery::newDocumentHtml($Out);
 			# Remove as quebras de linha
 			$Out = preg_replace("/\s+/", " ", $Out);
 			$Out = preg_match_all("'<(.*?)>'si", $Out, $match);
@@ -135,7 +133,6 @@ class rCSS
 			
 			$this->htmlTags = $htmlTags;
 			var_dump($htmlTags);
-			var_dump(count($htmlTags));
 		}
 	}
 	/*
@@ -155,15 +152,14 @@ class rCSS
 	{
 		foreach($this->htmlTags as $hTag)
 		{
-			var_dump($hTag);
 			#if(array_key_exists($hTag,$this->Selectors))
 			#{
 			#	echo $hTag . ' { ' . $this->Selectors[$hTag] . ' } <br />';
 			#}
 			$Key = array_search($hTag,$this->Selectors);
+			var_dump($hTag,$Key);
 			if($Key != false)
 			{
-				
 				if(!array_key_exists($Key,$this->UseSelectors))
 				{
 					$this->UseSelectors[$this->Selectors[$Key]] = $this->Styles[$Key];
