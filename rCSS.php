@@ -149,7 +149,10 @@ class rCSS
 	*/
 	function mergeAll()
 	{
-		var_dump($this->htmlTags,$this->Selectors);
+		echo '<h3>HTML TAGS</h3>';
+		var_dump($this->htmlTags);
+		echo '<h3>SELETORES CSS</h3>';
+		var_dump($this->Selectors);
 		foreach($this->htmlTags as $hTag)
 		{
 			#if(array_key_exists($hTag,$this->Selectors))
